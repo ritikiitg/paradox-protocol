@@ -1,9 +1,15 @@
-# [Paradox Protocol](https://ritikiitg.github.io/paradox-protocol/)
-
-![Paradox Protocol](ver2.0.png)
+# Paradox Protocol
 
 > **"Perfection is the only option."**
 > A single-file, zero-dependency tactical puzzle game where time is your weapon and your cage.
+
+## 🕹️ Game Versions
+
+| **Version 2.0 (Stable)** | **Version 1.0 (Legacy)** |
+| :---: | :---: |
+| ![Stable](ver2.0.png) | ![Legacy](ver1.0.png) |
+| [**Play Stable**](https://ritikiitg.github.io/paradox-protocol/) | [**Play Legacy**](https://ritikiitg.github.io/paradox-protocol/legacy.html) |
+
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
