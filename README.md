@@ -5,16 +5,10 @@
 
 ## 🕹️ Game Versions
 
-| **Version 2.0 (Stable)** | **Version 1.0 (Legacy)** |
+| **v2.0 (Latest)** | **v1.0 (Original)** |
 | :---: | :---: |
-| ![Stable](ver2.0.png) | ![Legacy](ver1.0.png) |
-| [**Play Stable**](https://ritikiitg.github.io/paradox-protocol/) | [**Play Legacy**](https://ritikiitg.github.io/paradox-protocol/legacy.html) |
-
-
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+| ![v2](v2/ver2.0.png) | ![v1](v1/ver1.0.png) |
+| [**Execute v2.0**](https://ritikiitg.github.io/paradox-protocol/v2/) | [**Access v1.0**](https://ritikiitg.github.io/paradox-protocol/v1/) |
 
 ## 🕹️ About The Game
 

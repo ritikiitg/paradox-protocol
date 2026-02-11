@@ -2,26 +2,13 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>PARADOX PROTOCOL</title>
-
-    <!-- Tailwind CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PARADOX PROTOCOL | GATEWAY</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Rajdhani:wght@400;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap"
         rel="stylesheet">
-
-    <!-- Icons -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
     <script>
         tailwind.config = {
             theme: {
@@ -33,31 +20,9 @@
                     colors: {
                         'protocol-blue': '#00f0ff',
                         'protocol-red': '#ff003c',
-                        'protocol-yellow': '#fcee0a',
-                        'protocol-dark': '#0d0d0d',
-                        'protocol-gray': '#1a1a1a',
-                    },
-                    animation: {
-                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'glitch': 'glitch 0.2s linear infinite',
-                        'scanline': 'scanline 8s linear infinite',
-                    },
-                    keyframes: {
-                        glitch: {
-                            '0%': { transform: 'translate(0)' },
-                            '20%': { transform: 'translate(-2px, 2px)' },
-                            '40%': { transform: 'translate(-2px, -2px)' },
-                            '60%': { transform: 'translate(2px, 2px)' },
-                            '80%': { transform: 'translate(2px, -2px)' },
-                            '100%': { transform: 'translate(0)' },
-                        },
-                        scanline: {
-                            '0%': { backgroundPosition: '0 0' },
-                            '100%': { backgroundPosition: '0 100%' },
-                        }
                     }
-                },
-            },
+                }
+            }
         }
     </script>
     <style>
@@ -65,962 +30,140 @@
             background-color: #050505;
             color: #e0e0e0;
             overflow: hidden;
-            touch-action: none;
         }
 
-        .scanlines {
-            background: linear-gradient(to bottom,
-                    rgba(255, 255, 255, 0),
-                    rgba(255, 255, 255, 0) 50%,
-                    rgba(0, 0, 0, 0.2) 50%,
-                    rgba(0, 0, 0, 0.2));
-            background-size: 100% 4px;
-            animation: scanline 0.2s linear infinite;
-            pointer-events: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 100;
-            opacity: 0.15;
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 240, 255, 0.1);
+            position: absolute;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% {
+                top: -2px;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        .glitch-text:hover {
+            animation: glitch 0.2s linear infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
         }
     </style>
 </head>
 
-<body>
-    <div class="scanlines"></div>
-    <div id="root"></div>
+<body class="font-display">
+    <div class="scanline"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.05)_0%,transparent_70%)]"></div>
 
-    <script type="text/babel" data-presets="react,typescript">
-        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+    <main class="relative z-10 h-screen flex flex-col items-center justify-center p-6">
+        <div class="text-center mb-16">
+            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter text-white uppercase italic">
+                PARADOX <span class="text-protocol-blue">PROTOCOL</span>
+            </h1>
+            <p class="text-gray-500 font-mono tracking-widest mt-4 uppercase text-sm">Select Synchronization Timeline
+            </p>
+        </div>
 
-        const Icon = ({ path, className, size = 24, fill = "none" }) => (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width={size}
-                height={size}
-                viewBox="0 0 24 24"
-                fill={fill}
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={className}
-            >
-                {path}
-            </svg>
-        );
-
-        const Zap = (props) => <Icon {...props} path={<polygon points="13 2 3 14 12 14 11 22 21 12 12 12 13 2"></polygon>} />;
-        const DoorOpen = (props) => <Icon {...props} path={<><path d="M13 4h3a2 2 0 0 1 2 2v14" /><path d="M2 20h3" /><path d="M13 20h9" /><path d="M10 12v.01" /><path d="M13 4.562v16.157a1 1 0 0 1-1.242.97L5 20V5.562a2 2 0 0 1 1.515-1.94l4-1A2 2 0 0 1 13 4.561Z" /></>} />;
-        const AlertTriangle = (props) => <Icon {...props} path={<><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></>} />;
-        const Timer = (props) => <Icon {...props} path={<><line x1="10" x2="14" y1="2" y2="2" /><line x1="12" x2="15" y1="14" y2="11" /><circle cx="12" cy="14" r="8" /></>} />;
-        const ShieldCheck = (props) => <Icon {...props} path={<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" /></>} />;
-        const Play = (props) => <Icon {...props} path={<polygon points="5 3 19 12 5 21 5 3"></polygon>} />;
-        const RefreshCw = (props) => <Icon {...props} path={<><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></>} />;
-        const Trophy = (props) => <Icon {...props} path={<><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" /><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" /><path d="M4 22h16" /><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" /><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" /><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" /></>} />;
-        const ChevronRight = (props) => <Icon {...props} path={<path d="m9 18 6-6-6-6" />} />;
-        const User = (props) => <Icon {...props} path={<><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></>} />;
-        const Volume2 = (props) => <Icon {...props} path={<><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></>} />;
-        const VolumeX = (props) => <Icon {...props} path={<><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15" /><line x1="17" y1="9" x2="23" y2="15" /></>} />;
-
-        // --- CONSTANTS ---
-        const GRID_SIZE = 8;
-        const MAX_LEVELS = 5;
-
-        // Types Enums 
-        const TileType = {
-            Empty: 'EMPTY',
-            Wall: 'WALL',
-            Exit: 'EXIT'
-        };
-
-        const TileColor = {
-            Neutral: 'NEUTRAL',
-            Red: 'RED',
-            Blue: 'BLUE',
-            Green: 'GREEN',
-            Yellow: 'YELLOW'
-        };
-
-        const DirectiveType = {
-            MoveToColor: 'MOVE_TO_COLOR',
-            AvoidColor: 'AVOID_COLOR',
-            MoveDirection: 'MOVE_DIRECTION'
-        };
-
-        const COLOR_MAP = {
-            [TileColor.Neutral]: '#2a2a2a',
-            [TileColor.Red]: '#7f1d1d',
-            [TileColor.Blue]: '#1e3a8a',
-            [TileColor.Green]: '#14532d',
-            [TileColor.Yellow]: '#713f12',
-        };
-
-        const COLOR_BORDER_MAP = {
-            [TileColor.Neutral]: '#525252',
-            [TileColor.Red]: '#f87171',
-            [TileColor.Blue]: '#60a5fa',
-            [TileColor.Green]: '#4ade80',
-            [TileColor.Yellow]: '#facc15',
-        };
-
-        const DIRECTIONS = [
-            { x: 0, y: -1, name: 'North' },
-            { x: 0, y: 1, name: 'South' },
-            { x: -1, y: 0, name: 'West' },
-            { x: 1, y: 0, name: 'East' },
-        ];
-
-        // --- AUDIO SYSTEM (by r i t i k r a j) ---
-        class AudioController {
-            constructor() {
-                this.ctx = null;
-                this.muted = false;
-                this.osc = null;
-                this.gain = null;
-            }
-
-            init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (this.ctx.state === 'suspended') {
-                    this.ctx.resume();
-                }
-            }
-
-            toggleMute() {
-                this.muted = !this.muted;
-                return this.muted;
-            }
-
-            playTone(freq, type, duration, vol = 0.1) {
-                if (this.muted || !this.ctx) return;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + duration);
-            }
-
-            playMove() {
-                this.playTone(600, 'sine', 0.1, 0.05);
-            }
-
-            playError() {
-                this.playTone(150, 'sawtooth', 0.3, 0.1);
-                this.playTone(100, 'square', 0.3, 0.1);
-            }
-
-            playWin() {
-                this.playTone(440, 'sine', 0.1, 0.1);
-                setTimeout(() => this.playTone(554, 'sine', 0.1, 0.1), 100);
-                setTimeout(() => this.playTone(659, 'sine', 0.2, 0.1), 200);
-            }
-
-            playLose() {
-                this.playTone(300, 'sawtooth', 0.4, 0.1);
-                setTimeout(() => this.playTone(150, 'sawtooth', 0.4, 0.1), 200);
-            }
-        }
-
-        // --- VISUAL JUICE (code by ritik raj) ---
-        class ParticleSystem {
-            constructor() {
-                this.particles = [];
-            }
-
-            spawn(x, y, color, count = 10) {
-                for (let i = 0; i < count; i++) {
-                    this.particles.push({
-                        x, y,
-                        vx: (Math.random() - 0.5) * 10,
-                        vy: (Math.random() - 0.5) * 10,
-                        life: 1.0,
-                        color
-                    });
-                }
-            }
-
-            update() {
-                this.particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life -= 0.05;
-                });
-                this.particles = this.particles.filter(p => p.life > 0);
-            }
-
-            draw(ctx) {
-                this.particles.forEach(p => {
-                    ctx.globalAlpha = p.life;
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, 4, 4);
-                });
-            }
-        }
-
-        // --- UTILS ---
-        const generateGrid = (size) => {
-            const grid = [];
-            const colors = [TileColor.Red, TileColor.Blue, TileColor.Green, TileColor.Yellow];
-
-            for (let y = 0; y < size; y++) {
-                const row = [];
-                for (let x = 0; x < size; x++) {
-                    const isWall = Math.random() > 0.85;
-                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                    row.push({
-                        type: isWall ? TileType.Wall : TileType.Empty,
-                        color: isWall ? TileColor.Neutral : randomColor,
-                        id: `${x}-${y}-${Math.random()}`,
-                    });
-                }
-                grid.push(row);
-            }
-
-            grid[0][0] = { type: TileType.Empty, color: TileColor.Blue, id: 'start' };
-            grid[size - 1][size - 1] = { type: TileType.Exit, color: TileColor.Neutral, id: 'exit' };
-
-            for (let i = 0; i < size; i++) {
-                if (grid[0][i].type === TileType.Wall) grid[0][i].type = TileType.Empty;
-                if (grid[i][size - 1].type === TileType.Wall) grid[i][size - 1].type = TileType.Empty;
-            }
-            return grid;
-        };
-
-        const generateDirective = (playerPos, grid) => {
-            const neighbors = [];
-            DIRECTIONS.forEach(d => {
-                const nx = playerPos.x + d.x;
-                const ny = playerPos.y + d.y;
-                if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {
-                    if (grid[ny][nx].type !== TileType.Wall) {
-                        neighbors.push({ pos: { x: nx, y: ny }, tile: grid[ny][nx] });
-                    }
-                }
-            });
-
-            if (neighbors.length === 0) {
-                return {
-                    id: Math.random().toString(),
-                    type: DirectiveType.MoveToColor,
-                    targetColor: TileColor.Blue,
-                    description: "SURVIVE",
-                };
-            }
-
-            const types = [DirectiveType.MoveToColor, DirectiveType.AvoidColor];
-            const selectedType = types[Math.floor(Math.random() * types.length)];
-            const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-
-            if (selectedType === DirectiveType.MoveToColor) {
-                const color = randomNeighbor.tile.color;
-                const colorName = color.charAt(0) + color.slice(1).toLowerCase();
-                return {
-                    id: Math.random().toString(),
-                    type: DirectiveType.MoveToColor,
-                    targetColor: color,
-                    description: `STEP ON ${colorName.toUpperCase()}`,
-                };
-            } else {
-                const color = randomNeighbor.tile.color;
-                const colorName = color.charAt(0) + color.slice(1).toLowerCase();
-                const hasOtherOption = neighbors.some(n => n.tile.color !== color);
-
-                if (hasOtherOption) {
-                    return {
-                        id: Math.random().toString(),
-                        type: DirectiveType.AvoidColor,
-                        targetColor: color,
-                        description: `AVOID ${colorName.toUpperCase()}`,
-                    };
-                } else {
-                    return {
-                        id: Math.random().toString(),
-                        type: DirectiveType.MoveToColor,
-                        targetColor: color,
-                        description: `STEP ON ${colorName.toUpperCase()}`,
-                    };
-                }
-            }
-        };
-
-        const checkDirectiveCompliance = (prevPos, newPos, grid, directive) => {
-            const tile = grid[newPos.y][newPos.x];
-            if (directive.type === DirectiveType.MoveToColor) return tile.color === directive.targetColor;
-            if (directive.type === DirectiveType.AvoidColor) return tile.color !== directive.targetColor;
-            return true;
-        };
-
-        const moveEnemies = (enemies, playerPos, grid) => {
-            return enemies.map(enemy => {
-                const dx = playerPos.x - enemy.pos.x;
-                const dy = playerPos.y - enemy.pos.y;
-                let nextPos = { ...enemy.pos };
-
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    const step = dx > 0 ? 1 : -1;
-                    if (grid[enemy.pos.y][enemy.pos.x + step]?.type !== TileType.Wall) {
-                        nextPos.x += step;
-                    } else if (dy !== 0) {
-                        const stepY = dy > 0 ? 1 : -1;
-                        if (grid[enemy.pos.y + step]?.[enemy.pos.x]?.type !== TileType.Wall) nextPos.y += stepY;
-                    }
-                } else {
-                    const step = dy > 0 ? 1 : -1;
-                    if (grid[enemy.pos.y + step]?.[enemy.pos.x]?.type !== TileType.Wall) {
-                        nextPos.y += step;
-                    } else if (dx !== 0) {
-                        const stepX = dx > 0 ? 1 : -1;
-                        if (grid[enemy.pos.y][enemy.pos.x + stepX]?.type !== TileType.Wall) nextPos.x += stepX;
-                    }
-                }
-                return { ...enemy, pos: nextPos };
-            });
-        };
-
-        // --- LEADERBOARD LOGIC ---
-        const getLeaderboard = () => {
-            const stored = localStorage.getItem('paradox_leaderboard');
-            return stored ? JSON.parse(stored) : [];
-        };
-
-        const saveScore = (name, level, mistakes, status, score) => {
-            const scores = getLeaderboard();
-            const newScore = {
-                name,
-                level,
-                mistakes,
-                status,
-                score: score || 0,
-                timestamp: Date.now()
-            };
-            scores.push(newScore);
-
-            scores.sort((a, b) => {
-                if (a.status !== b.status) return a.status === 'WON' ? -1 : 1;
-                if ((a.score || 0) !== (b.score || 0)) return (b.score || 0) - (a.score || 0);
-                if (a.level !== b.level) return b.level - a.level;
-                if (a.mistakes !== b.mistakes) return a.mistakes - b.mistakes;
-                return b.timestamp - a.timestamp;
-            });
-
-            const topScores = scores.slice(0, 10); // Keep top 10
-            localStorage.setItem('paradox_leaderboard', JSON.stringify(topScores));
-            return topScores;
-        };
-
-        // --- COMPONENTS ---
-
-        const TileComponent = ({ tile, x, y, isPlayer, isEnemy, isMistake, playerPos, lastAction }) => {
-            const baseStyle = "w-full h-full border border-opacity-20 flex items-center justify-center relative transition-colors duration-300";
-            let bgColor = COLOR_MAP[tile.color];
-            let borderColor = COLOR_BORDER_MAP[tile.color];
-            let shadow = 'none';
-
-            if (tile.type === TileType.Wall) {
-                bgColor = '#171717';
-                borderColor = '#262626';
-            } else if (tile.type === TileType.Exit) {
-                bgColor = '#0d0d0d';
-                borderColor = '#00f0ff';
-                shadow = 'inset 0 0 20px #00f0ff';
-            }
-
-            return (
-                <div className={baseStyle} style={{ backgroundColor: bgColor, borderColor: borderColor, boxShadow: shadow }}>
-                    {tile.type === TileType.Exit && (
-                        <div className="relative w-3/4 h-3/4 flex items-center justify-center">
-                            <div className="absolute inset-0 border-2 border-dashed border-protocol-blue rounded-full animate-[spin_4s_linear_infinite] opacity-60"></div>
-                            <div className="absolute inset-2 border-2 border-dotted border-white rounded-full animate-[spin_3s_linear_infinite_reverse] opacity-40"></div>
-                            <div className="absolute inset-0 bg-protocol-blue rounded-full blur-md opacity-20 animate-pulse"></div>
-                            <div className="w-1 h-1 bg-white rounded-full shadow-[0_0_10px_white] animate-ping"></div>
-                        </div>
-                    )}
-                    {tile.type === TileType.Wall && (
-                        <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-                    )}
-                    {isEnemy && (
-                        <div className="absolute inset-0 flex items-center justify-center z-10">
-                            <div className="w-5/6 h-5/6 relative flex items-center justify-center">
-                                <div className="absolute inset-0 border-2 border-protocol-red/30 border-t-protocol-red border-l-transparent rounded-full animate-[spin_3s_linear_infinite]"></div>
-                                <div className="absolute inset-1 border border-protocol-red/50 border-b-protocol-red border-r-transparent rounded-full animate-[spin_5s_linear_infinite_reverse]"></div>
-
-                                <div className="absolute inset-2 bg-black rounded-full border border-protocol-red/40 shadow-[inset_0_0_15px_rgba(255,0,60,0.5)] overflow-hidden flex items-center justify-center">
-                                    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,0,60,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,60,0.1)_1px,transparent_1px)] bg-[size:4px_4px] opacity-50"></div>
-                                    <div
-                                        className="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_#ff003c,0_0_20px_#ff003c] relative z-20 transition-transform duration-100 ease-out"
-                                        style={(lastAction === 'MISTAKE' && playerPos) ? {
-                                            transform: `translate(${Math.cos(Math.atan2(playerPos.y - y, playerPos.x - x)) * 8}px, ${Math.sin(Math.atan2(playerPos.y - y, playerPos.x - x)) * 8}px)`
-                                        } : {}}
-                                    >
-                                        <div className="absolute inset-0 bg-protocol-red opacity-50 blur-[2px] rounded-full animate-pulse"></div>
-                                    </div>
-
-                                    <div className="absolute top-1 right-2 w-2 h-1 bg-white opacity-20 rounded-full blur-[1px] transform rotate-45 z-30 pointer-events-none"></div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {isPlayer && (
-                        <div className="absolute inset-0 flex items-center justify-center z-20">
-                            {(() => {
-                                const mainColor = isMistake ? '#ff003c' : '#00f0ff';
-                                return (
-                                    <div className="w-5/6 h-5/6 relative flex items-center justify-center">
-                                        <div
-                                            className={`absolute inset-0 border-2 rounded-full animate-[spin_4s_linear_infinite] shadow-[0_0_10px_inset]`}
-                                            style={{ borderColor: `${mainColor}40`, boxShadow: `inset 0 0 10px ${mainColor}` }}
-                                        ></div>
-
-                                        <div
-                                            className="absolute inset-1 border border-dashed rounded-full animate-[spin_8s_linear_infinite_reverse]"
-                                            style={{ borderColor: `${mainColor}80` }}
-                                        ></div>
-
-                                        <div
-                                            className="relative w-3/4 h-3/4 bg-black rounded-xl border flex flex-col items-center justify-center overflow-hidden transition-colors duration-200"
-                                            style={{ borderColor: mainColor, boxShadow: `0 0 15px ${mainColor}40` }}
-                                        >
-                                            <div className="absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
-                                            <div className="w-full h-1/3 bg-black/50 flex items-center justify-center relative mt-2">
-                                                <div
-                                                    className="w-3/4 h-2 rounded-full animate-pulse shadow-[0_0_8px]"
-                                                    style={{ backgroundColor: mainColor, boxShadow: `0 0 8px ${mainColor}` }}
-                                                ></div>
-                                            </div>
-
-                                            {/* code by ritik raj  */}
-                                            <div
-                                                className="w-1/3 h-2 border-b-2 rounded-b-full opacity-80 mb-2"
-                                                style={{ borderColor: mainColor }}
-                                            ></div>
-
-                                            <div
-                                                className="w-full h-1/3 opacity-20"
-                                                style={{ backgroundColor: mainColor }}
-                                            ></div>
-                                        </div>
-
-                                        {isMistake && (
-                                            <div className="absolute inset-0 bg-red-500/20 blur-md animate-ping rounded-full pointer-events-none"></div>
-                                        )}
-                                    </div>
-                                );
-                            })()}
-                        </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-10 pointer-events-none"></div>
-                </div>
-            );
-        };
-
-        const InfoPanel = ({ gameState }) => {
-            const { currentDirective, mistakes, lastAction, timeFrozen, level, score } = gameState;
-            return (
-                <div className="w-full max-w-lg mx-auto mb-4 font-display pointer-events-none select-none">
-                    <div className="flex justify-between items-end mb-4 px-2">
-                        <div>
-                            <h1 className="text-2xl font-bold tracking-widest text-protocol-blue uppercase">Paradox Protocol</h1>
-                            <p className="text-xs text-gray-500 font-mono">SECTOR {level}</p>
-                        </div>
-                        <div className="flex flex-col items-end gap-1">
-                            <div className="flex items-center gap-2 text-protocol-blue">
-                                <Trophy size={16} />
-                                <span className="text-xl font-bold">{score.toString().padStart(6, '0')}</span>
-                                <span className="text-xs uppercase tracking-wider text-gray-400">PTS</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-protocol-red">
-                                <AlertTriangle size={16} />
-                                <span className="text-xl font-bold">{mistakes}</span>
-                                <span className="text-xs uppercase tracking-wider text-gray-400">Slips</span>
-                            </div>
-                        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+            <!-- Version 2 -->
+            <a href="v2/"
+                class="group relative block p-1 bg-gradient-to-br from-protocol-blue/20 to-transparent hover:from-protocol-blue/50 transition-all duration-500 overflow-hidden">
+                <div class="bg-black/80 p-8 h-full flex flex-col items-center text-center">
+                    <div class="w-full mb-6 overflow-hidden aspect-video relative">
+                        <img src="v2/ver2.0.png" alt="v2.0"
+                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-110">
+                        <div class="absolute inset-0 bg-protocol-blue/10 mix-blend-overlay"></div>
                     </div>
-                    <div className={`relative p-4 border-l-4 rounded-r-lg bg-gray-900 shadow-lg transition-all duration-300 overflow-hidden ${timeFrozen ? 'border-protocol-blue shadow-[0_0_20px_rgba(0,240,255,0.2)]' : 'border-protocol-red shadow-[0_0_20px_rgba(255,0,60,0.2)]'}`}>
-                        {!timeFrozen && <div className="absolute inset-0 bg-protocol-red opacity-10 animate-pulse pointer-events-none"></div>}
-                        <div className="flex justify-between items-center relative z-10">
-                            <div>
-                                <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Current Protocol</p>
-                                <h2 className={`text-2xl font-bold uppercase tracking-tight ${currentDirective.type === DirectiveType.AvoidColor ? 'text-protocol-red' : 'text-white'}`}>
-                                    {currentDirective.description}
-                                </h2>
-                            </div>
-                            <div className="flex flex-col items-center justify-center w-16 h-16 rounded bg-black border border-gray-800">
-                                {timeFrozen ? (
-                                    <>
-                                        <ShieldCheck className="text-protocol-blue mb-1" size={24} />
-                                        <span className="text-[10px] text-protocol-blue font-bold uppercase">Frozen</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Timer className="text-protocol-red animate-spin mb-1" size={24} />
-                                        <span className="text-[10px] text-protocol-red font-bold uppercase">Flowing</span>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                        <div className="mt-2 h-6 flex items-center">
-                            {lastAction === 'PERFECT' && <span className="text-sm text-protocol-blue font-mono flex items-center gap-2 animate-pulse"><ShieldCheck size={14} /> SYSTEM STABLE. TIME HALTED.</span>}
-                            {lastAction === 'MISTAKE' && <span className="text-sm text-protocol-red font-mono flex items-center gap-2 animate-glitch"><Zap size={14} /> ERROR DETECTED. TIME ADVANCING.</span>}
-                            {lastAction === 'NONE' && <span className="text-sm text-gray-600 font-mono">AWAITING INPUT...</span>}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const ScoreNotification = ({ popup, gridSize }) => {
-            if (!popup) return null;
-
-            return (
-                <div key={popup.id}
-                    className="absolute z-[100] pointer-events-none animate-in zoom-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col items-center justify-center"
-                    style={popup.style || { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-                >
-                    <div className="bg-black/80 backdrop-blur-sm border border-protocol-blue/50 px-4 py-1 rounded-full shadow-[0_0_15px_rgba(0,240,255,0.4)] flex items-center gap-2">
-                        <Trophy size={14} className="text-protocol-blue animate-pulse" />
-                        <span className="text-xl font-bold italic text-white tracking-wider font-mono">
-                            {popup.text}
-                        </span>
-                    </div>
-                </div>
-            );
-        };
-
-        const Leaderboard = ({ onRestart, gameState }) => {
-            const [name, setName] = useState('');
-            const [submitted, setSubmitted] = useState(false);
-            const [highScores, setHighScores] = useState([]);
-
-            // Initial Load
-            useEffect(() => {
-                setHighScores(getLeaderboard());
-            }, []);
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (!name.trim()) return;
-                const newScores = saveScore(name.toUpperCase(), gameState.level, gameState.mistakes, gameState.status, gameState.score);
-                setHighScores(newScores);
-                setSubmitted(true);
-            };
-
-            return (
-                <div className="absolute inset-0 bg-black/95 z-50 flex flex-col items-center justify-center p-6 animate-in fade-in duration-500 font-display">
-                    <h2 className={`text-5xl md:text-6xl font-bold mb-2 ${gameState.status === 'WON' ? 'text-protocol-blue' : 'text-protocol-red'} tracking-tight`}>
-                        {gameState.status === 'WON' ? 'SEQUENCE COMPLETE' : 'TIMELINE COLLAPSED'}
-                    </h2>
-                    <p className="text-gray-500 font-mono mb-8 uppercase tracking-widest text-sm">
-                        {gameState.status === 'WON' ? 'Synchronization Rate: 100%' : 'Critical Variance Detected'}
+                    <h2 class="text-4xl font-bold text-protocol-blue mb-2 italic">VERSION 2.0</h2>
+                    <span class="text-xs font-mono text-protocol-blue/60 uppercase tracking-widest mb-4">Current Stable
+                        Release</span>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        Optimized architecture, refined time mechanics, and enhanced neural feedback. 100% sync rate
+                        recommended.
                     </p>
-
-                    {!submitted ? (
-                        <div className="w-full max-w-sm bg-gray-900 border border-gray-800 p-6 rounded-lg shadow-2xl">
-                            <div className="flex justify-between font-mono text-sm text-gray-400 mb-2">
-                                <span>SECTOR: <span className="text-white">{gameState.level}</span></span>
-                                <span>SLIPS: <span className="text-white">{gameState.mistakes}</span></span>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <label className="block text-xs uppercase tracking-widest text-protocol-blue">Identify Agent</label>
-                                        <span className="text-xs font-mono text-gray-500">FINAL SCORE: <span className="text-white font-bold">{gameState.score}</span></span>
-                                    </div>
-                                    <input
-                                        autoFocus
-                                        type="text"
-                                        maxLength={10}
-                                        value={name}
-                                        onChange={e => setName(e.target.value)}
-                                        placeholder="CALLSIGN"
-                                        className="w-full bg-black border-2 border-gray-700 text-white p-3 font-mono text-xl uppercase focus:border-protocol-blue focus:outline-none focus:shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all"
-                                    />
-                                </div>
-                                <button type="submit" className="w-full py-3 bg-protocol-blue text-black font-bold uppercase tracking-widest hover:bg-white hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
-                                    Upload Data <ChevronRight size={16} />
-                                </button>
-                            </form>
-                        </div>
-                    ) : (
-                        <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[60vh]">
-                            <div className="bg-gray-950 p-4 border-b border-gray-800 flex items-center justify-center gap-2">
-                                <Trophy className="text-protocol-yellow" size={20} />
-                                <h3 className="text-xl font-bold uppercase tracking-widest text-protocol-yellow">Elite Agents</h3>
-                            </div>
-                            <div className="overflow-y-auto flex-1 p-2 space-y-1 custom-scrollbar">
-                                {highScores.map((score, idx) => (
-                                    <div key={idx} className={`flex items-center justify-between p-3 rounded ${score.name === name.toUpperCase() && Date.now() - score.timestamp < 2000 ? 'bg-protocol-blue/20 border border-protocol-blue/50' : 'bg-black border border-gray-800'}`}>
-                                        <div className="flex items-center gap-3">
-                                            <span className={`font-mono font-bold text-lg w-6 ${idx < 3 ? 'text-protocol-yellow' : 'text-gray-600'}`}>#{idx + 1}</span>
-                                            <div className="flex flex-col">
-                                                <span className="font-bold text-white uppercase tracking-wider">{score.name}</span>
-                                                <span className={`text-[10px] uppercase px-1 rounded w-fit ${score.status === 'WON' ? 'bg-protocol-blue/20 text-protocol-blue' : 'bg-protocol-red/20 text-protocol-red'}`}>{score.status}</span>
-                                            </div>
-                                        </div>
-                                        <div className="text-right font-mono text-xs text-gray-400 flex flex-col items-end">
-                                            <div className="text-protocol-blue font-bold">{score.score || 0} PTS</div>
-                                            <div>LVL {score.level}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="p-4 border-t border-gray-800 bg-gray-950">
-                                <button onClick={onRestart} className="w-full py-3 bg-white text-black font-bold uppercase tracking-widest hover:bg-protocol-blue transition-colors flex items-center justify-center gap-2">
-                                    <RefreshCw size={16} /> Reboot System
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                    <div
+                        class="mt-8 px-8 py-3 bg-protocol-blue text-black font-bold uppercase tracking-widest group-hover:bg-white transition-colors">
+                        Enter Protocol
+                    </div>
                 </div>
-            );
-        };
-
-        // --- MAIN APP ---
-        const INITIAL_STATE = {
-            status: 'START',
-            level: 1,
-            grid: [],
-            player: { id: 'p1', pos: { x: 0, y: 0 }, type: 'PLAYER' },
-            enemies: [],
-            gridSize: GRID_SIZE,
-            mistakes: 0,
-            timeFrozen: true,
-            currentDirective: { id: '0', type: DirectiveType.MoveToColor, targetColor: TileColor.Blue, description: 'INITIALIZING...' },
-            turnCount: 0,
-            lastAction: 'NONE',
-            score: 0,
-            scorePopup: null, // { text: string, id: number }
-        };
-
-        const App = () => {
-            const [gameState, setGameState] = useState(INITIAL_STATE);
-            const [muted, setMuted] = useState(false);
-            const audioController = useRef(new AudioController());
-            const particleSystem = useRef(new ParticleSystem());
-            const canvasRef = useRef(null);
-            const touchStart = useRef(null);
-
-            // --- GAME LOOP (Particles) ---
-            useEffect(() => {
-                let animationFrameId;
-                const render = () => {
-                    if (canvasRef.current) {
-                        const ctx = canvasRef.current.getContext('2d');
-                        if (canvasRef.current.width !== window.innerWidth || canvasRef.current.height !== window.innerHeight) {
-                            canvasRef.current.width = window.innerWidth;
-                            canvasRef.current.height = window.innerHeight;
-                        }
-                        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-                        particleSystem.current.update();
-                        particleSystem.current.draw(ctx);
-                    }
-                    animationFrameId = requestAnimationFrame(render);
-                };
-                render();
-                return () => cancelAnimationFrame(animationFrameId);
-            }, []);
-
-            const toggleMute = () => {
-                const isMuted = audioController.current.toggleMute();
-                setMuted(isMuted);
-            };
-
-            const initLevel = useCallback((level) => {
-                audioController.current.init();
-                audioController.current.playTone(200, 'sine', 0.5, 0.05);
-
-                const newGrid = generateGrid(GRID_SIZE);
-                const newEnemies = [];
-                const enemyCount = Math.min(level + 1, 8);
-
-                for (let i = 0; i < enemyCount; i++) {
-                    let ex = Math.floor(Math.random() * GRID_SIZE);
-                    let ey = Math.floor(Math.random() * GRID_SIZE);
-                    while ((ex < 3 && ey < 3) || newGrid[ey][ex].type === TileType.Wall) {
-                        ex = Math.floor(Math.random() * GRID_SIZE);
-                        ey = Math.floor(Math.random() * GRID_SIZE);
-                    }
-                    newEnemies.push({ id: `e-${i}`, pos: { x: ex, y: ey }, type: 'ENEMY' });
-                }
-
-                const startPos = { x: 0, y: 0 };
-                const initialDirective = generateDirective(startPos, newGrid);
-
-                setGameState(prev => ({
-                    ...prev,
-                    status: 'PLAYING',
-                    level,
-                    grid: newGrid,
-                    player: { ...prev.player, pos: startPos },
-                    enemies: newEnemies,
-                    mistakes: 0,
-                    timeFrozen: true,
-                    currentDirective: initialDirective,
-                    turnCount: 0,
-                    lastAction: 'NONE',
-                }));
-            }, []);
-
-            const handleMove = useCallback((dx, dy) => {
-                if (gameState.status !== 'PLAYING') return;
-
-                const { player, grid, enemies, currentDirective, level } = gameState;
-                const newX = player.pos.x + dx;
-                const newY = player.pos.y + dy;
-
-                if (newX < 0 || newX >= GRID_SIZE || newY < 0 || newY >= GRID_SIZE) return;
-
-                audioController.current.playMove();
-
-                let scoreChange = 0;
-                let newScorePopup = null;
-
-                if (grid[newY][newX].type === TileType.Wall) {
-                    const nextEnemies = moveEnemies(enemies, player.pos, grid);
-                    const hitByEnemy = nextEnemies.some(e => e.pos.x === player.pos.x && e.pos.y === player.pos.y);
-
-                    audioController.current.playError();
-                    if (navigator.vibrate) navigator.vibrate(200);
-
-                    setGameState(prev => ({
-                        ...prev,
-                        enemies: nextEnemies,
-                        mistakes: prev.mistakes + 1,
-                        score: Math.max(0, prev.score - 1),
-                        lastAction: 'MISTAKE',
-                        timeFrozen: false,
-                        status: hitByEnemy ? 'LOST' : prev.status
-                    }));
-
-                    if (hitByEnemy) audioController.current.playLose();
-                    return;
-                }
-
-                const newPos = { x: newX, y: newY };
-                const isCompliant = checkDirectiveCompliance(player.pos, newPos, grid, currentDirective);
-
-                let nextEnemies = enemies;
-                let timeFrozen = true;
-                let lastAction = 'PERFECT';
-
-                if (!isCompliant) {
-                    timeFrozen = false;
-                    lastAction = 'MISTAKE';
-                    scoreChange -= 1; // -1 for incorrect move
-                    nextEnemies = moveEnemies(enemies, newPos, grid);
-                    audioController.current.playError();
-                    if (navigator.vibrate) navigator.vibrate(200);
-                } else {
-                    scoreChange += 1;
-                }
-
-                if (lastAction === 'MISTAKE') {
-                    const uniqueEnemies = [];
-                    const enemyMap = new Map();
-                    let eliminatedCount = 0;
-                    let collisionPos = null;
-
-                    nextEnemies.forEach(e => {
-                        const key = `${e.pos.x},${e.pos.y}`;
-                        if (!enemyMap.has(key)) {
-                            enemyMap.set(key, e);
-                            uniqueEnemies.push(e);
-                        } else {
-                            eliminatedCount++;
-                            collisionPos = e.pos;
-                        }
-                    });
-
-                    if (eliminatedCount > 0 && collisionPos) {
-                        const points = eliminatedCount * 100;
-                        scoreChange += points;
-
-                        newScorePopup = {
-                            text: `+${points}`,
-                            id: Date.now(),
-                            style: {
-                                top: `${(collisionPos.y / GRID_SIZE) * 100 + (100 / GRID_SIZE / 2)}%`,
-                                left: `${(collisionPos.x / GRID_SIZE) * 100 + (100 / GRID_SIZE / 2)}%`,
-                                position: 'absolute',
-                                transform: 'translate(-50%, -50%)',
-                                width: '200px',
-                                textAlign: 'center',
-                                zIndex: 100
-                            }
-                        };
-
-                        if (navigator.vibrate) navigator.vibrate(300);
-                        audioController.current.playWin();
-                    }
-                    nextEnemies = uniqueEnemies;
-                }
-
-                if (grid[newY][newX].type === TileType.Exit) {
-                    audioController.current.playWin();
-                    particleSystem.current.spawn(window.innerWidth / 2, window.innerHeight / 2, '#00f0ff', 50);
-
-                    setGameState(prev => ({ ...prev, score: prev.score + scoreChange + 25 }));
-
-                    initLevel(level + 1);
-                    return;
-                }
-
-                const nextDirective = generateDirective(newPos, grid);
-                const hitByEnemy = nextEnemies.some(e => e.pos.x === newX && e.pos.y === newY);
-
-                if (hitByEnemy) {
-                    audioController.current.playLose();
-                    if (navigator.vibrate) navigator.vibrate(500);
-                }
-
-                setGameState(prev => ({
-                    ...prev,
-                    player: { ...prev.player, pos: newPos },
-                    enemies: nextEnemies,
-                    currentDirective: nextDirective,
-                    mistakes: isCompliant ? prev.mistakes : prev.mistakes + 1,
-                    score: Math.max(0, prev.score + scoreChange),
-                    scorePopup: newScorePopup || prev.scorePopup,
-                    timeFrozen,
-                    lastAction,
-                    turnCount: prev.turnCount + 1,
-                    status: hitByEnemy ? 'LOST' : prev.status
-                }));
-
-                if (newScorePopup) {
-                    setTimeout(() => setGameState(prev => ({ ...prev, scorePopup: null })), 2000);
-                }
-
-            }, [gameState, initLevel]);
-
-            // --- CONTROLS ---
-            useEffect(() => {
-                const handleKeyDown = (e) => {
-                    switch (e.key) {
-                        case 'ArrowUp': case 'w': case 'W': handleMove(0, -1); break;
-                        case 'ArrowDown': case 's': case 'S': handleMove(0, 1); break;
-                        case 'ArrowLeft': case 'a': case 'A': handleMove(-1, 0); break;
-                        case 'ArrowRight': case 'd': case 'D': handleMove(1, 0); break;
-                    }
-                };
-                window.addEventListener('keydown', handleKeyDown);
-                return () => window.removeEventListener('keydown', handleKeyDown);
-            }, [handleMove]);
-
-            const handleTouchStart = (e) => {
-                touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-            };
-
-            const handleTouchEnd = (e) => {
-                if (!touchStart.current) return;
-                const endX = e.changedTouches[0].clientX;
-                const endY = e.changedTouches[0].clientY;
-                const dx = endX - touchStart.current.x;
-                const dy = endY - touchStart.current.y;
-
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    if (Math.abs(dx) > 30) handleMove(dx > 0 ? 1 : -1, 0);
-                } else {
-                    if (Math.abs(dy) > 30) handleMove(0, dy > 0 ? 1 : -1);
-                }
-                touchStart.current = null;
-            };
-
-            return (
-                <div
-                    className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4 selection:bg-protocol-blue selection:text-black overflow-hidden relative"
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={handleTouchEnd}
-                >
-                    <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-50 w-full h-full" />
-
-                    <button
-                        onClick={toggleMute}
-                        className="absolute top-4 right-4 z-[100] text-gray-500 hover:text-white transition-colors"
-                    >
-                        {muted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-                    </button>
-
-                    {gameState.status === 'START' && (
-                        <div className="max-w-md text-center space-y-8 animate-in fade-in zoom-in duration-500 font-display relative z-10">
-                            <h1 className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-protocol-blue via-white to-protocol-blue animate-pulse">
-                                PARADOX<br />PROTOCOL
-                            </h1>
-                            <div className="space-y-4 text-gray-400 font-mono text-sm max-w-sm mx-auto">
-                                <p>Welcome, Chrono-Agent.</p>
-                                <ul className="text-left space-y-2 bg-gray-900 p-4 rounded border border-gray-800">
-                                    <li className="flex items-center gap-2"><span className="text-protocol-blue">●</span> <span>Follow directives to FREEZE TIME.</span></li>
-                                    <li className="flex items-center gap-2"><span className="text-protocol-red">●</span> <span>Errors cause time to flow.</span></li>
-                                    <li className="flex items-center gap-2"><span className="text-protocol-red">●</span> <span>When time flows, THEY move.</span></li>
-                                </ul>
-                            </div>
-                            <button onClick={() => initLevel(1)} className="group relative px-8 py-4 bg-protocol-blue text-black font-bold text-xl uppercase tracking-widest overflow-hidden transition-all hover:bg-white hover:scale-105 shadow-[0_0_20px_rgba(0,240,255,0.4)]">
-                                <span className="relative z-10 flex items-center gap-2">Initialize Sequence <Play size={20} /></span>
-                            </button>
-                        </div>
-                    )}
-
-                    {gameState.status === 'PLAYING' && (
-                        <div className={`w-full max-w-2xl flex flex-col items-center relative z-10 transition-transform duration-100 ${gameState.lastAction === 'MISTAKE' ? 'translate-x-1 translate-y-1' : ''}`}>
-                            {/* Simple screen shake code by ritik raj*/}
-
-                            <InfoPanel gameState={gameState} />
-
-                            <div className="relative bg-gray-900 p-2 rounded-xl shadow-2xl border border-gray-800"
-                                style={{
-                                    aspectRatio: '1/1',
-                                    display: 'grid',
-                                    gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                                    gridTemplateRows: `repeat(${GRID_SIZE}, 1fr)`,
-                                    width: '100%',
-                                    maxWidth: '500px',
-                                    gap: '2px',
-                                    position: 'relative'
-                                }}>
-
-                                <ScoreNotification popup={gameState.scorePopup} />
-
-                                {gameState.grid.map((row, y) => row.map((tile, x) => (
-                                    <TileComponent
-                                        key={tile.id}
-                                        tile={tile}
-                                        x={x} y={y}
-                                        isPlayer={gameState.player.pos.x === x && gameState.player.pos.y === y}
-                                        isEnemy={gameState.enemies.some(e => e.pos.x === x && e.pos.y === y)}
-                                        isMistake={gameState.player.pos.x === x && gameState.player.pos.y === y && gameState.lastAction === 'MISTAKE'}
-                                        playerPos={gameState.player.pos}
-                                        lastAction={gameState.lastAction}
-                                    />
-                                )))}
-                            </div>
-
-                            <div className="mt-4 text-xs text-gray-500 font-mono">
-                                SWIPE or use WASD to Move
-                            </div>
-                        </div>
-                    )}
-
-                    {(gameState.status === 'WON' || gameState.status === 'LOST') && (
-                        <Leaderboard onRestart={() => initLevel(1)} gameState={gameState} />
-                    )}
+                <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
+                    <span class="text-8xl font-black text-protocol-blue">v2</span>
                 </div>
-            );
-        }
+            </a>
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+            <!-- Version 1 -->
+            <a href="v1/"
+                class="group relative block p-1 bg-gradient-to-br from-protocol-red/20 to-transparent hover:from-protocol-red/50 transition-all duration-500 overflow-hidden">
+                <div class="bg-black/80 p-8 h-full flex flex-col items-center text-center">
+                    <div class="w-full mb-6 overflow-hidden aspect-video relative">
+                        <img src="v1/ver1.0.png" alt="v1.0"
+                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-110">
+                        <div class="absolute inset-0 bg-protocol-red/10 mix-blend-overlay"></div>
+                    </div>
+                    <h2 class="text-4xl font-bold text-protocol-red mb-2 italic">VERSION 1.0</h2>
+                    <span class="text-xs font-mono text-protocol-red/60 uppercase tracking-widest mb-4">Legacy
+                        Prototype</span>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
+                        The original data-stream. High latency distortion and primitive sentinel logic. For historical
+                        analysis only.
+                    </p>
+                    <div
+                        class="mt-8 px-8 py-3 border 1px border-protocol-red text-protocol-red font-bold uppercase tracking-widest group-hover:bg-protocol-red group-hover:text-black transition-all">
+                        Access Archive
+                    </div>
+                </div>
+                <div class="absolute bottom-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
+                    <span class="text-8xl font-black text-protocol-red">v1</span>
+                </div>
+            </a>
+        </div>
 
-    </script>
+        <div
+            class="mt-16 flex items-center gap-8 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
+            <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"
+                alt="React">
+            <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"
+                alt="Tailwind">
+            <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"
+                alt="HTML5">
+        </div>
+    </main>
+
+    <footer
+        class="absolute bottom-4 w-full text-center text-[10px] font-mono text-gray-700 uppercase tracking-[0.2em] pointer-events-none">
+        &copy; ritik raj // paradox protocol // secure connection established
+    </footer>
 </body>
 
 </html>
