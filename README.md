@@ -22,7 +22,7 @@ Inspired by *Superhot*'s time mechanics and the high-tension aesthetics of *Cybe
 
 ## ✨ Key Features
 
-*   **📦 Single-File Architecture**: The entire game is contained in one `game.html` file. No bundlers, no installs, no external assets.
+*   **📦 Single-File Architecture**: The entire game is contained in one `index.html` file. No bundlers, no installs, no external assets.
 *   **🔊 Real-Time Audio Synthesis**: A custom Web Audio API engine generates all sound effects (drones, glitches, chimes) mathematically on the fly.
 *   **🎨 Dynamic Visuals**: A high-performance Canvas particle system overlays the React UI for premium effects like sparks, vortexes, and snow.
 *   **👁️ "Cyber-Eye" AI**: Enemy sentinels physically track your position on screen, adding to the immersion.
@@ -36,6 +36,10 @@ Inspired by *Superhot*'s time mechanics and the high-tension aesthetics of *Cybe
     ```
 2.  **Open** `game.html` in any modern web browser.
 3.  **Play**. That's it.
+
+## 🌍 Deployment
+
+Played live at: [https://ritikiitg.github.io/paradox-protocol/](https://ritikiitg.github.io/paradox-protocol/)
 
 ## 🎮 How to Play
 
