@@ -1,4 +1,4 @@
-# Paradox Protocol
+# [Paradox Protocol](https://ritikiitg.github.io/paradox-protocol/)
 
 ![Paradox Protocol](ver2.0.png)
 
