@@ -39,7 +39,7 @@ Inspired by *Superhot*'s time mechanics and the high-tension aesthetics of *Cybe
 
 ## 🌍 Deployment
 
-Played live at: [https://ritikiitg.github.io/paradox-protocol/](https://ritikiitg.github.io/paradox-protocol/)
+Played live at: [HERE](https://ritikiitg.github.io/paradox-protocol/)
 
 ## 🎮 How to Play
 
